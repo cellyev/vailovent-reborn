@@ -69,6 +69,11 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    transactions: Transaction;
+    transaction_items: TransactionItem;
+    products: Product;
+    product_images: ProductImage;
+    email_logs: EmailLog;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +83,11 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    transactions: TransactionsSelect<false> | TransactionsSelect<true>;
+    transaction_items: TransactionItemsSelect<false> | TransactionItemsSelect<true>;
+    products: ProductsSelect<false> | ProductsSelect<true>;
+    product_images: ProductImagesSelect<false> | ProductImagesSelect<true>;
+    email_logs: EmailLogsSelect<false> | EmailLogsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -161,6 +171,85 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "transactions".
+ */
+export interface Transaction {
+  id: string;
+  device_id: string;
+  customer_name: string;
+  customer_email: string;
+  total_amount: number;
+  status: 'pending' | 'paid' | 'failed' | 'cancelled';
+  deleted_at?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "transaction_items".
+ */
+export interface TransactionItem {
+  id: string;
+  transaction: string | Transaction;
+  product: string | Product;
+  quantity: number;
+  price: number;
+  subtotal: number;
+  deleted_at?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: string;
+  name: string;
+  description?: string | null;
+  stock: number;
+  price: number;
+  image?: (string | null) | ProductImage;
+  is_active?: boolean | null;
+  deleted_at?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product_images".
+ */
+export interface ProductImage {
+  id: string;
+  alt?: string | null;
+  deleted_at?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "email_logs".
+ */
+export interface EmailLog {
+  id: string;
+  transaction: string | Transaction;
+  email_type: 'invoice' | 'payment' | 'reminder';
+  email_link?: string | null;
+  sent_at?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -190,6 +279,26 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'transactions';
+        value: string | Transaction;
+      } | null)
+    | ({
+        relationTo: 'transaction_items';
+        value: string | TransactionItem;
+      } | null)
+    | ({
+        relationTo: 'products';
+        value: string | Product;
+      } | null)
+    | ({
+        relationTo: 'product_images';
+        value: string | ProductImage;
+      } | null)
+    | ({
+        relationTo: 'email_logs';
+        value: string | EmailLog;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -272,6 +381,80 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "transactions_select".
+ */
+export interface TransactionsSelect<T extends boolean = true> {
+  device_id?: T;
+  customer_name?: T;
+  customer_email?: T;
+  total_amount?: T;
+  status?: T;
+  deleted_at?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "transaction_items_select".
+ */
+export interface TransactionItemsSelect<T extends boolean = true> {
+  transaction?: T;
+  product?: T;
+  quantity?: T;
+  price?: T;
+  subtotal?: T;
+  deleted_at?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  stock?: T;
+  price?: T;
+  image?: T;
+  is_active?: T;
+  deleted_at?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product_images_select".
+ */
+export interface ProductImagesSelect<T extends boolean = true> {
+  alt?: T;
+  deleted_at?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "email_logs_select".
+ */
+export interface EmailLogsSelect<T extends boolean = true> {
+  transaction?: T;
+  email_type?: T;
+  email_link?: T;
+  sent_at?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
